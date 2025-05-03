@@ -24,6 +24,19 @@ body {
   grid-template-rows: 10% 90%;
 }
 
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+select {
+  border-radius: 20px;
+  border: none;
+  font-size: 20px;
+}
+
 #searchbar {
   grid-column: 1 / -1;
   grid-row: 1 / 2;
@@ -205,6 +218,14 @@ body::before {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
   }
 
   #searchbar,

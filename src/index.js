@@ -54,6 +54,12 @@ const weatherIcon = document.getElementById("weather-icon");
 
 const searchInput = document.getElementById("search");
 
+let currentUnit = "celsius";
+
+function toCelsius(fahrenheit) {
+  return ((fahrenheit - 32) * 5) / 9;
+}
+
 async function getWeather(city) {
   const response = await fetch(
     "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/" +
@@ -67,16 +73,21 @@ async function getWeather(city) {
   return weatherData;
 }
 
-function dateFormatter(date){
+function dateFormatter(date) {
   const day = new Date(date);
-  const dayName = day.toLocaleDateString('en-US', { weekday: 'long' });
+  const dayName = day.toLocaleDateString("en-US", { weekday: "long" });
 
   return dayName;
 }
 
-function renderCurrent(data){
+function renderCurrent(data) {
+  const temp =
+    currentUnit === "celsius"
+      ? Math.round(toCelsius(data.currentConditions.temp)) + "°C"
+      : data.currentConditions.temp + "°F";
+
   cityName.textContent = data.resolvedAddress;
-  grad.textContent = data.currentConditions.temp + "°F";
+  grad.textContent = temp;
   descrption.textContent = data.currentConditions.conditions;
   weatherIcon.src = weatherIcons[data.currentConditions.icon];
 }
@@ -99,9 +110,14 @@ function renderNext(data) {
     icon.classList.add("days-icon");
     icon.src = weatherIcons[data.days[i].icon];
 
+    const temp =
+      currentUnit === "celsius"
+        ? Math.round(toCelsius(data.days[i].temp)) + "°C"
+        : data.days[i].temp + "°F";
+
     const grad = document.createElement("p");
     grad.classList.add("days-grad");
-    grad.textContent = data.days[i].temp + "°F";
+    grad.textContent = temp;
 
     cardInfo.appendChild(icon);
     cardInfo.appendChild(grad);
@@ -110,7 +126,6 @@ function renderNext(data) {
     cardContainer.appendChild(card);
   }
 }
-
 
 searchInput.addEventListener("keydown", async function (event) {
   if (event.key === "Enter") {
@@ -127,7 +142,21 @@ searchInput.addEventListener("keydown", async function (event) {
   }
 });
 
-async function defaultWather(){
+const unitSelector = document.getElementById("temperature-scale");
+
+unitSelector.addEventListener("change", async function () {
+  currentUnit = this.value;
+  const city = searchInput.value || "tokio";
+  try {
+    const data = await getWeather(city);
+    renderCurrent(data);
+    renderNext(data);
+  } catch (error) {
+    console.error("Error al actualizar el clima:", error);
+  }
+});
+
+async function defaultWather() {
   try {
     const data = await getWeather("tokio");
     renderCurrent(data);
