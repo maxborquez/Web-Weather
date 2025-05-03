@@ -47,6 +47,13 @@ const weatherIcons = {
   wind: wind,
 };
 
+const cityName = document.getElementById("city-name");
+const grad = document.getElementById("grad");
+const descrption = document.getElementById("description");
+const weatherIcon = document.getElementById("weather-icon");
+
+const searchInput = document.getElementById("search");
+
 async function getWeather(city) {
   const response = await fetch(
     "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/" +
@@ -60,12 +67,50 @@ async function getWeather(city) {
   return weatherData;
 }
 
-const cityName = document.getElementById("city-name");
-const grad = document.getElementById("grad");
-const descrption = document.getElementById("description");
-const weatherIcon = document.getElementById("weather-icon");
+function dateFormatter(date){
+  const day = new Date(date);
+  const dayName = day.toLocaleDateString('en-US', { weekday: 'long' });
 
-const searchInput = document.getElementById("search");
+  return dayName;
+}
+
+function renderCurrent(data){
+  cityName.textContent = data.resolvedAddress;
+  grad.textContent = data.currentConditions.temp + "°F";
+  descrption.textContent = data.currentConditions.conditions;
+  weatherIcon.src = weatherIcons[data.currentConditions.icon];
+}
+
+function renderNext(data) {
+  const cardContainer = document.getElementById("six-days");
+  cardContainer.innerHTML = ``;
+  for (let i = 2; i <= 7; i++) {
+    const card = document.createElement("div");
+    card.classList.add("day-card");
+
+    const cardDate = document.createElement("h2");
+    cardDate.textContent = dateFormatter(data.days[i].datetime);
+    card.appendChild(cardDate);
+
+    const cardInfo = document.createElement("div");
+    cardInfo.id = "days-icon-grad";
+
+    const icon = document.createElement("img");
+    icon.classList.add("days-icon");
+    icon.src = weatherIcons[data.days[i].icon];
+
+    const grad = document.createElement("p");
+    grad.classList.add("days-grad");
+    grad.textContent = data.days[i].temp + "°F";
+
+    cardInfo.appendChild(icon);
+    cardInfo.appendChild(grad);
+
+    card.appendChild(cardInfo);
+    cardContainer.appendChild(card);
+  }
+}
+
 
 searchInput.addEventListener("keydown", async function (event) {
   if (event.key === "Enter") {
@@ -74,13 +119,22 @@ searchInput.addEventListener("keydown", async function (event) {
     const city = searchInput.value;
     try {
       const data = await getWeather(city);
-
-      cityName.textContent = data.resolvedAddress;
-      grad.textContent = data.currentConditions.temp + "°F";
-      descrption.textContent = data.currentConditions.conditions;
-      weatherIcon.src = weatherIcons[data.currentConditions.icon];
+      renderCurrent(data);
+      renderNext(data);
     } catch (error) {
       console.error("Error al obtener el clima:", error);
     }
   }
 });
+
+async function defaultWather(){
+  try {
+    const data = await getWeather("tokio");
+    renderCurrent(data);
+    renderNext(data);
+  } catch (error) {
+    console.error("Error al obtener el clima:", error);
+  }
+}
+
+defaultWather();

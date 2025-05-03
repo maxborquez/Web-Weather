@@ -98,6 +98,9 @@ body {
 
 #weather-icon {
   width: 100px;
+  height: 100px;
+  max-width: 100px;
+  max-height: 100px;
 }
 
 #grad {
@@ -111,6 +114,7 @@ body {
   align-items: center;
   flex-wrap: wrap;
   text-align: center;
+  gap: 1em;
 }
 
 #info-container svg {
@@ -130,7 +134,12 @@ p {
   margin-bottom: 0;
 }
 
-#six-fays {
+h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#six-days {
   grid-column: 4 / -1;
   grid-row: 2 / 3;
   display: flex;
@@ -141,7 +150,7 @@ p {
   flex-wrap: wrap;
 }
 
-#day-card {
+.day-card {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -153,19 +162,23 @@ p {
   max-width: 300px;
   width: 100%;
   box-sizing: border-box;
+  text-align: center;
 }
 
-#days-icon {
+.days-icon {
   width: 70px;
+  height: 70px;
+  max-width: 70px;
+  max-height: 70px;
 }
 
-#days-grad {
+.days-grad {
   font-size: 30px;
   text-align: center;
   font-weight: bold;
 }
 
-#days-icon-grad {
+.days-icon-grad {
   display: flex;
   flex-direction: row;
   gap: 2em;
@@ -218,12 +231,7 @@ body::before {
     text-align: center;
   }
 
-  #info-container {
-    text-align: center;
-    gap: 1em;
-  }
-
-  #six-fays {
+  #six-days {
     flex-direction: column;
     justify-content: center;
     align-items: center;
