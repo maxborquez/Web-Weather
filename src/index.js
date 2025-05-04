@@ -51,6 +51,9 @@ const cityName = document.getElementById("city-name");
 const grad = document.getElementById("grad");
 const descrption = document.getElementById("description");
 const weatherIcon = document.getElementById("weather-icon");
+const humidity = document.getElementById("humidity");
+const maxTemp = document.getElementById("maxTemp");
+const minTemp = document.getElementById("minTemp");
 
 const searchInput = document.getElementById("search");
 
@@ -76,9 +79,12 @@ async function getWeather(city) {
 function dateFormatter(date) {
   const day = new Date(date);
   const dayName = day.toLocaleDateString("en-US", { weekday: "long" });
+  const dayNumber = day.getDate();
+  const monthNumber = day.getMonth() + 1;
 
-  return dayName;
+  return `${dayName} ${dayNumber}/${monthNumber}`;
 }
+
 
 function renderCurrent(data) {
   const temp =
@@ -90,6 +96,15 @@ function renderCurrent(data) {
   grad.textContent = temp;
   descrption.textContent = data.currentConditions.conditions;
   weatherIcon.src = weatherIcons[data.currentConditions.icon];
+  humidity.textContent = data.currentConditions.humidity;
+  maxTemp.textContent =
+    currentUnit === "celsius"
+      ? Math.round(toCelsius(data.days[0].tempmax)) + "°C"
+      : data.days[0].tempmax + "°F";
+  minTemp.textContent =
+    currentUnit === "celsius"
+      ? Math.round(toCelsius(data.days[0].tempmin)) + "°C"
+      : data.days[0].tempmin + "°F";
 }
 
 function renderNext(data) {

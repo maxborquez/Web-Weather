@@ -121,6 +121,17 @@ select {
   text-align: center;
 }
 
+#sub-info{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+#sub-info svg{
+  fill: white;
+}
+
+
 #info-container {
   display: flex;
   justify-content: center;
